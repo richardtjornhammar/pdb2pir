@@ -48,13 +48,17 @@ int main (int argc, char *argv[] ) {
 		fatal();
 	}
 
-	const char *vs1[]	= {	"---","ala","asn","asp","arg","cys","gln",
+	const char	*vs1[]	= {	"---","ala","asn","asp","arg","cys","gln",
 					"glu","gly","his","ile","leu","lys","met",
 					"pro","phe","ser","thr","trp","tyr","val",
 					"unk","ALA","ASN","ASP","ARG","CYS","GLN",
 					"GLU","GLY","HIS","ILE","LEU","LYS","MET",
 					"PRO","PHE","SER","THR","TRP","TYR","VAL",
 					"UNK" };
+	const char	*vs2[]	= {	"sec","cso","glx","asx","xaa",
+					"SEC","CSO","GLX","ASX","XAA" };
+	const char      *vc2	= "uczbxUCZBX" ;
+	int Nadd		= 10;
 	int Ncodes		= 43;
 	const char *vc1		= "-andrcqeghilkmpfstwyvxANDRCQEGHILKMPFSTWYVX";
 
@@ -88,6 +92,7 @@ int main (int argc, char *argv[] ) {
 				char A = line[21];
 				int ccct = (int) (A-'A') ;
 				for( int i=0; i<wrds.size() ; i++ )  {
+
 					for(int j=0; j<Ncodes ; j++) {
 						if(bHit==1)
 							continue;
@@ -100,6 +105,23 @@ int main (int argc, char *argv[] ) {
 								I=i;
 								J=j;
 							}
+						}
+					}
+
+					if ( bHit == 0 ) {
+						for(int j=0;j<Nadd;j++) {
+                                                	if(bHit==1)
+                                                	        continue;
+                                                	std::string tmp(vs2[j]);
+                                                	std::size_t found3 = wrds[i].find(tmp);
+                                                	if( found3 != std::string::npos ) {
+                                                        	if( ( wrds[i].size()  > 3 && wrds[i][0]=='A')
+                                                         	||  ( wrds[i].size() == 3 ) ) {
+                                                                	bHit=1;
+                                                                	I=i;
+                                                                	J=j+Ncodes;
+                                                        	}
+                                                	}
 						}
 					}
 				}
@@ -122,7 +144,11 @@ int main (int argc, char *argv[] ) {
 					}
 					// std::cout << vc1[J];
 					std::stringstream ss;
-					ss << vc1[J];
+					if ( J<Ncodes ) {
+						ss << vc1[ J	];
+					}else{
+						ss << vc2[ J-Ncodes ];
+					}
 					chn_str.append(ss.str());
 				}
 			}
